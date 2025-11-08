@@ -1,0 +1,141 @@
+{
+  "info": {
+    "name": "ATGS API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "atgs-collection"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{base_url}}/auth/signup", "host": [ "{{base_url}}" ], "path": [ "auth", "signup" ] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Admin One\",\n  \"email\": \"admin1@example.com\",\n  \"password\": \"secret123\",\n  \"role\": \"Admin\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "url": { "raw": "{{base_url}}/auth/login", "host": [ "{{base_url}}" ], "path": [ "auth", "login" ] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin1@example.com\",\n  \"password\": \"secret123\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "pm.environment.set('token', data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Uploads",
+      "item": [
+        {
+          "name": "Upload Courses",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/upload/courses", "host": [ "{{base_url}}" ], "path": [ "upload", "courses" ] },
+            "body": { "mode": "raw", "raw": "{\n  \"data\": [\n    { \"code\": \"CS101\", \"name\": \"Data Structures\", \"hoursPerWeek\": 3, \"department\": \"CSE\", \"type\": \"Theory\", \"sections\": [\"A\"] },\n    { \"code\": \"CS101_Lab\", \"name\": \"DS Lab\", \"hoursPerWeek\": 2, \"department\": \"CSE\", \"type\": \"Lab\", \"sections\": [\"A\"] }\n  ]\n}" }
+          }
+        },
+        {
+          "name": "Upload Faculty",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/upload/faculty", "host": [ "{{base_url}}" ], "path": [ "upload", "faculty" ] },
+            "body": { "mode": "raw", "raw": "{\n  \"data\": [\n    { \"name\": \"Dr. Smith\", \"department\": \"CSE\", \"email\": \"smith@uni.edu\", \"maxLoadPerWeek\": 18, \"subjects\": [\"CS101\", \"CS101_Lab\"] },\n    { \"name\": \"Dr. Lee\", \"department\": \"CSE\", \"email\": \"lee@uni.edu\", \"maxLoadPerWeek\": 18, \"subjects\": [\"CS101\"] }\n  ]\n}" }
+          }
+        },
+        {
+          "name": "Upload Classrooms",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/upload/classrooms", "host": [ "{{base_url}}" ], "path": [ "upload", "classrooms" ] },
+            "body": { "mode": "raw", "raw": "{\n  \"data\": [\n    { \"code\": \"R101\", \"capacity\": 60, \"type\": \"Lecture\", \"department\": \"CSE\" },\n    { \"code\": \"LAB-A\", \"capacity\": 30, \"type\": \"Lab\", \"department\": \"CSE\" }\n  ]\n}" }
+          }
+        },
+        {
+          "name": "Upload Sections",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/upload/sections", "host": [ "{{base_url}}" ], "path": [ "upload", "sections" ] },
+            "body": { "mode": "raw", "raw": "{\n  \"data\": [\n    { \"sectionId\": \"CSE-A\", \"name\": \"A\", \"year\": 2, \"department\": \"CSE\", \"semester\": 3, \"strength\": 55 }\n  ]\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Timetable",
+      "item": [
+        {
+          "name": "Generate",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/timetable/generate", "host": [ "{{base_url}}" ], "path": [ "timetable", "generate" ] },
+            "body": { "mode": "raw", "raw": "{\n  \"persist\": true\n}" }
+          }
+        },
+        {
+          "name": "Get Latest",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+            "url": { "raw": "{{base_url}}/timetable", "host": [ "{{base_url}}" ], "path": [ "timetable" ] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Export",
+      "item": [
+        {
+          "name": "CSV",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/export/csv", "host": [ "{{base_url}}" ], "path": [ "export", "csv" ] } }
+        },
+        {
+          "name": "PDF",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/export/pdf", "host": [ "{{base_url}}" ], "path": [ "export", "pdf" ] } }
+        }
+      ]
+    }
+  ]
+}
