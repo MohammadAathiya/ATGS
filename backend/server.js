@@ -20,15 +20,24 @@ const app = express()
 const server = http.createServer(app)
 
 const io = new SocketIOServer(server, {
-  cors: { origin: '*', methods: ['GET','POST','PUT','DELETE'] }
+  cors: { 
+    origin: process.env.FRONTEND_URL || '*', 
+    methods: ['GET','POST','PUT','DELETE'],
+    credentials: true
+  }
 })
 
 app.set('io', io)
 
-// Middleware
-app.use(cors())
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || '*',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}
+app.use(cors(corsOptions))
 app.use(express.json({ limit: '5mb' }))
-app.use(morgan('dev'))
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'))
 
 // Health
 app.get('/health', (_req, res) => res.json({ ok: true }))
